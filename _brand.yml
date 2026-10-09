@@ -1,4 +1,27 @@
+meta:
+  name: devontools
+  link: https://github.com/devonberkove/devontools
+
+logo:
+  images:
+    logo:
+      path: images/logo.png
+  small: logo
+  medium: logo
+  large: logo
+
 color:
   palette:
     blue: "#034694"
-    off-white: "#F9FAF6"
+    lightblue: "#73B9EE"
+    green: "#005C35"
+    purple: "#38003c"
+    offwhite: "#F9FAF6"
+    black: "#000000"
+  primary: "#034694"
+  background: "#F9FAF6"
+
+typography:
+  base:
+    family: monospace
+    color:  "#034694"
