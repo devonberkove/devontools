@@ -29,16 +29,22 @@ df <- data.frame(
 
 # Apply base theme to graph
 ggplot2::ggplot(df, ggplot2::aes(x = teachers, y = students)) +
-  ggplot2::geom_point() +
-  devon_theme()
+  ggplot2::geom_point(color = "#38003c") +
+  devon_theme() +
+  ggplot2::labs(x = "Teachers", y = "Students", title = "Scatterplot of Students vs. Teachers")
 
 # Apply to bar chart to get rid of vertical grid lines
-ggplot2::ggplot(df, ggplot2::aes(x = teachers)) +
+ggplot2::ggplot(df, ggplot2::aes(x = subjects, fill = subjects)) +
   ggplot2::geom_bar() +
-  devon_theme(plot_type = "bar")
+  devon_theme(plot_type = "bar") +
+  ggplot2::labs(x = "Teachers", y = "Count", title = "Barplot of Students vs. Teachers") +
+  ggplot2::scale_fill_manual(values = c("Math" = "#005C35", "Science" = "#38003c"))
 
 # Apply to bar chart to get rid of vertical grid lines and legend
 ggplot2::ggplot(df, ggplot2::aes(x = subjects, fill = subjects)) +
   ggplot2::geom_bar() +
-  devon_theme(plot_type = "bar", remove_legend = TRUE)
+  devon_theme(plot_type = "bar", remove_legend = TRUE) +
+  ggplot2::labs(x = "Teachers", y = "Count", title = "Barplot of Students vs. Teachers") +
+  ggplot2::scale_fill_manual(values = c("Math" = "#005C35", "Science" = "#38003c"))
+
 }

@@ -5,7 +5,7 @@ meta:
 logo:
   images:
     logo:
-      path: images/logo.png
+      path: ../images/logo.png
   small: logo
   medium: logo
   large: logo

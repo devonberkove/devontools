@@ -101,5 +101,7 @@ and a dark purple (hex code #38003c). For some contrast, the colors black
 and an off white (hex code #F9FAF6) are added too. These colors were also 
 put through an accessibility check with the off white as the background,
 and all but the light blue passed all accessibility checks with a score of 
-AA or better. However, the light blue should be used sparingly and is the 
-last color used in plots. 
+AA or better. However, the light blue should not be used unless necessary. The
+theme also used the font Courier New and makes the font color the Chelsea blue
+similar to the theme function, and includes the logo for the package (see
+top of ReadMe).
