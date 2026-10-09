@@ -1,0 +1,19 @@
+Package: devontools
+Title: Helper and Theme Function with Helpful Vignette
+Version: 0.0.0.9000
+Authors@R: 
+    person("Devon", "Berkove", , "djb050@bucknell.edu", role = c("aut", "cre"))
+Description: This package is the culmination of the MATH 306 package project. It contains two functions, one of which is a custom theme function influenced by the Premier League theme, and the other a normalizing function for single attributes in a data frame with the options to create a new proportion column as well. There is also a helpful vignette demonstrating the uses and limits of the functions.
+License: MIT + file LICENSE
+Imports: 
+    dplyr,
+    ggplot2,
+    rlang,
+    magrittr
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.0
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

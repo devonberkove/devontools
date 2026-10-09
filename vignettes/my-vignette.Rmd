@@ -1,0 +1,135 @@
+---
+title: "my-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{my-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This vignette demonstrates the uses of the two functions within the package. The first is `normalize()`, which calculates an attribute's group totals for a specified numeric attribute and optionally adds a proportion column representing the proportion of each of the numeric column's contribution to the group's total. The second, `devon_theme()`, applies a custom theme towards graphs in ggplot2. 
+
+We begin by installing the necessary libraries and the data set `diamonds` in `ggplot2`.
+
+```{r setup}
+library(devontools)
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+diamonds <- ggplot2::diamonds
+```
+
+# Normalize
+
+Within the diamonds data frame is information about the cut and clarity of these diamonds. The best cut for diamonds is Ideal while the best clarity is IF (Internally Flawless), and we are going to look at both of these separately.
+
+```{r}
+ideal <- diamonds %>%
+  filter(cut == "Ideal")
+
+IF <- diamonds %>%
+  filter(clarity == "IF")
+```
+
+Let's start with the ideal diamonds. Suppose we wanted to see how much each diamond contributed to the total cost of all the diamonds, but taking into consideration the color of each one. The first thing we might want to do is find the total price of all the diamonds of each color:
+
+```{r}
+color_counts <- ideal %>%
+  group_by(color) %>%
+  summarize(total = sum(price))
+```
+
+The best way to add this to the data frame is to join it, so we will do that too:
+
+```{r}
+ideal <- ideal %>%
+  left_join(y = color_counts, by = c("color"))
+```
+
+Great, now we have all our totals, but this still does not give a price comparison across colors. We will mutate that column, by diving a diamond's price by the total cost of that color:
+
+```{r}
+ideal <- ideal %>%
+  mutate(cost_proportion = price/total)
+```
+
+Now that we have this, we can see which diamonds contribute the most to their color's total price. For example, to find which diamond overall contributes the largest proportion to their color's total cost, we can do the following:
+
+```{r}
+ideal %>%
+  arrange(desc(cost_proportion))
+```
+
+Instead of going through this lengthy process, though, it can all be done more concisely using `normalize()`:
+
+```{r}
+# Reset the data frame
+ideal <- diamonds %>%
+  filter(cut == "Ideal")
+
+ideal <- normalize(ideal, color, price, prop_column = TRUE)
+ideal %>%
+  arrange(desc(prop))
+```
+
+We can then look at our proportions, or any other explorations, from this. If you do not want the proportion column, we simply make the prop_column argument equal to FALSE. For example, if we wanted just the totals of IF diamonds by cut, but not the proportions we do the following:
+
+```{r}
+normalize(IF, cut, price, prop_column = FALSE)
+```
+
+# Devon_Theme
+
+```{r}
+ideal_premium <- diamonds %>%
+  filter(cut %in% c("Ideal", "Premium"))
+```
+
+The devon_theme is a custom which is applied to graphs in `ggplot2`. Let's take ideal and premium data frames, which contain the ideal and premium diamonds respectively, and compare the relationship between carat and price, noting which diamonds are in each data frame. To start, we make a scatterplot:
+
+```{r}
+ggplot(ideal_premium, aes(x = carat, y = price, color = cut)) + 
+  geom_point(alpha = 0.5)
+```
+
+Now let's add the theme with some colors from the brand.yml:
+
+```{r}
+ggplot(ideal_premium, aes(x = carat, y = price, color = cut)) + 
+  geom_point(alpha = 0.5) + 
+  devon_theme() + 
+  labs(x = "Carat",
+       y = "Price",
+       title = "Scatterplot of Price vs. Carat",
+       color = "Cut") +
+  scale_color_manual(
+    values = c("Premium" = "#005C35",
+               "Ideal" = "#38003c")
+  )
+```
+
+If the chart type is a bar chart, we can specify that as an argument in `devon_theme` and it will get rid of the vertical grid lines. Additionally, there is an argument which gets rid of the legend if the fill variable is the same as a variable which is already plotted and labeled:
+
+```{r}
+ggplot(ideal_premium, aes(x = cut, fill = cut)) +
+  geom_bar() +
+  devon_theme(plot_type = "bar", remove_legend = TRUE) +
+  labs(x = "Cut",
+       y = "Number of Diamonds",
+       title = "Number of Diamonds by Cut",
+       fill = "Cut"
+  ) +
+  scale_fill_manual(
+    values = c("Premium" = "#005C35",
+               "Ideal" = "#38003c")
+  )
+```
